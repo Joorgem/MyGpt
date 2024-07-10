@@ -3,4 +3,3 @@ python-dotenv
 ipykernel
 streamlit
 unidecode
-uuid

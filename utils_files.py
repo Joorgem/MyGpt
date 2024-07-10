@@ -17,9 +17,13 @@ def converte_nome_mensagem(nome_mensagem):
 
 def desconverte_nome_mensagem(nome_arquivo):
     if nome_arquivo not in CACHE_DESCONVERTE:
-        nome_mensagem = ler_mensagem_por_nome_arquivo(nome_arquivo, key='nome_mensagem')
-        CACHE_DESCONVERTE[nome_arquivo] = nome_mensagem
+        try:
+            nome_mensagem = ler_mensagem_por_nome_arquivo(nome_arquivo, key='nome_mensagem')
+            CACHE_DESCONVERTE[nome_arquivo] = nome_mensagem
+        except FileNotFoundError:
+            return "Arquivo não encontrado"
     return CACHE_DESCONVERTE[nome_arquivo]
+
 
 def retorna_nome_mensagem(mensagens):
     nome_mensagem = ''
@@ -41,9 +45,13 @@ def salvar_mensagens(mensagens):
         pickle.dump(arquivo_salvar, f)
 
 def ler_mensagem_por_nome_arquivo(nome_arquivo, key='mensagem'):
-    with open(PASTA_MENSAGENS / nome_arquivo, 'rb') as f:
-        mensagens = pickle.load(f)
-    return mensagens[key]
+    caminho_arquivo = PASTA_MENSAGENS / nome_arquivo
+    if caminho_arquivo.is_file():
+        with open(caminho_arquivo, 'rb') as f:
+            mensagens = pickle.load(f)
+        return mensagens[key]
+    else:
+        raise FileNotFoundError(f"{nome_arquivo} não é um arquivo válido.")
 
 def ler_mensagens(mensagens, key='mensagem'):
     if len(mensagens) == 0:
