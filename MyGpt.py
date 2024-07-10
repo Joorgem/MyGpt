@@ -17,11 +17,18 @@ def inicializacao():
     if 'user_id' not in st.session_state:
         st.session_state.user_id = str(uuid.uuid4())
 
+    # Carregar conversas do usuário se existirem
+    if st.session_state.conversa_atual:
+        try:
+            st.session_state.mensagens = ler_mensagem_por_nome_arquivo(st.session_state.conversa_atual)
+        except FileNotFoundError:
+            st.session_state.mensagens = []
+
 
 # PÁGINA PRINCIPAL ====================================
 
 def pagina_principal():
-    mensagens = ler_mensagens(st.session_state.mensagens)
+    mensagens = st.session_state.mensagens
 
     st.header('🤖 My GPT', divider=True)
 
@@ -83,10 +90,14 @@ def tab_conversas(tab):
 def seleciona_conversa(nome_arquivo):
     if nome_arquivo == '':
         st.session_state.mensagens = []
+        st.session_state.conversa_atual = ''
     else:
-        mensagem = ler_mensagem_por_nome_arquivo(nome_arquivo)
-        st.session_state.mensagens = mensagem
-        st.session_state['conversa_atual'] = nome_arquivo
+        try:
+            mensagem = ler_mensagem_por_nome_arquivo(nome_arquivo)
+            st.session_state.mensagens = mensagem
+            st.session_state.conversa_atual = nome_arquivo
+        except FileNotFoundError:
+            st.error(f"Could not find conversation: {nome_arquivo}")
 
 def tab_configuracoes(tab):
     modelo_escolhido = tab.selectbox('Selecione o modelo',
