@@ -2,6 +2,7 @@ import re
 from pathlib import Path
 import pickle
 from unidecode import unidecode
+import streamlit as st
 
 PASTA_CONFIGURACOES = Path(__file__).parent / 'configuracoes'
 PASTA_CONFIGURACOES.mkdir(exist_ok=True)
@@ -33,16 +34,19 @@ def retorna_nome_mensagem(mensagens):
 def salvar_mensagens(mensagens):
     if len(mensagens) == 0:
         return False
+    user_dir = PASTA_MENSAGENS / st.session_state.user_id
+    user_dir.mkdir(parents=True, exist_ok=True)
     nome_mensagem = retorna_nome_mensagem(mensagens)
     nome_arquivo = converte_nome_mensagem(nome_mensagem)
     arquivo_salvar = {'nome_mensagem': nome_mensagem,
                       'nome_arquivo': nome_arquivo,
                       'mensagem': mensagens}
-    with open(PASTA_MENSAGENS / nome_arquivo, 'wb') as f:
+    with open(user_dir / nome_arquivo, 'wb') as f:
         pickle.dump(arquivo_salvar, f)
 
 def ler_mensagem_por_nome_arquivo(nome_arquivo, key='mensagem'):
-    with open(PASTA_MENSAGENS / nome_arquivo, 'rb') as f:
+    user_dir = PASTA_MENSAGENS / st.session_state.user_id
+    with open(user_dir / nome_arquivo, 'rb') as f:
         mensagens = pickle.load(f)
     return mensagens[key]
 
@@ -56,7 +60,8 @@ def ler_mensagens(mensagens, key='mensagem'):
     return mensagens[key]
 
 def listar_conversas():
-    conversas = list(PASTA_MENSAGENS.glob('*'))
+    user_dir = PASTA_MENSAGENS / st.session_state.user_id
+    conversas = list(user_dir.glob('*'))
     conversas = sorted(conversas, key=lambda item: item.stat().st_mtime_ns, reverse=True)
     return [c.stem for c in conversas]
 

@@ -1,5 +1,5 @@
 import streamlit as st
-
+import uuid
 from utils_openai import retorna_resposta_modelo
 from utils_files import *
 
@@ -14,6 +14,9 @@ def inicializacao():
         st.session_state.modelo = 'gpt-3.5-turbo'
     if 'api_key' not in st.session_state:
         st.session_state.api_key = le_chave()
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = str(uuid.uuid4())
+
 
 # PÁGINA PRINCIPAL ====================================
 
