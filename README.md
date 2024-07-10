@@ -77,10 +77,6 @@ If you want to contribute to the project, follow the steps below:
 4. Push to the branch (`git push origin my-new-feature`).
 5. Create a new Pull Request.
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
 ## Contact
 
 Jorge M.  
