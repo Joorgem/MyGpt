@@ -3,8 +3,6 @@ import uuid
 from utils_openai import retorna_resposta_modelo
 from utils_files import *
 
-#INICIALIZAÇÃO =======================================
-
 def inicializacao():
     if 'mensagens' not in st.session_state:
         st.session_state.mensagens = []
@@ -17,15 +15,11 @@ def inicializacao():
     if 'user_id' not in st.session_state:
         st.session_state.user_id = str(uuid.uuid4())
 
-    # Carregar conversas do usuário se existirem
     if st.session_state.conversa_atual:
         try:
             st.session_state.mensagens = ler_mensagem_por_nome_arquivo(st.session_state.conversa_atual)
         except FileNotFoundError:
             st.session_state.mensagens = []
-
-
-# PÁGINA PRINCIPAL ====================================
 
 def pagina_principal():
     mensagens = st.session_state.mensagens
@@ -68,8 +62,6 @@ def pagina_principal():
             st.session_state.mensagens = mensagens
             salvar_mensagens(mensagens)
 
-#TABS =================================================
-
 def tab_conversas(tab):
     tab.button('➕ Nova Conversa',
                on_click=seleciona_conversa,
@@ -109,8 +101,6 @@ def tab_configuracoes(tab):
         st.session_state['api_key'] = chave
         salva_chave(chave)
         tab.success('Chave salva com sucesso')
-
-# MAIN =================================================
 
 def main():
     inicializacao()

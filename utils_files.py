@@ -10,8 +10,6 @@ PASTA_MENSAGENS = Path(__file__).parent / 'mensagens'
 PASTA_MENSAGENS.mkdir(exist_ok=True)
 CACHE_DESCONVERTE = {}
 
-# SALVAMENTO E LEITURA DAS CONVERSAS =================
-
 def converte_nome_mensagem(nome_mensagem):
     nome_arquivo = unidecode(nome_mensagem)
     nome_arquivo = re.sub(r'\W+', '', nome_arquivo).lower()
@@ -53,19 +51,19 @@ def ler_mensagem_por_nome_arquivo(nome_arquivo, key='mensagem'):
 def ler_mensagens(mensagens, key='mensagem'):
     if len(mensagens) == 0:
         return []
+    user_dir = PASTA_MENSAGENS / st.session_state.user_id
     nome_mensagem = retorna_nome_mensagem(mensagens)
     nome_arquivo = converte_nome_mensagem(nome_mensagem)
-    with open(PASTA_MENSAGENS / nome_arquivo, 'rb') as f:
+    with open(user_dir / nome_arquivo, 'rb') as f:
         mensagens = pickle.load(f)
     return mensagens[key]
 
 def listar_conversas():
     user_dir = PASTA_MENSAGENS / st.session_state.user_id
+    user_dir.mkdir(parents=True, exist_ok=True)
     conversas = list(user_dir.glob('*'))
     conversas = sorted(conversas, key=lambda item: item.stat().st_mtime_ns, reverse=True)
     return [c.stem for c in conversas]
-
-# SALVAMENTO E LEITURA DA API KEY ====================
 
 def salva_chave(chave):
     with open(PASTA_CONFIGURACOES / 'chave', 'wb') as f:
