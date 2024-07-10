@@ -1,5 +1,4 @@
 import streamlit as st
-import uuid
 from utils_openai import retorna_resposta_modelo
 from utils_files import *
 
@@ -12,9 +11,8 @@ def inicializacao():
         st.session_state.modelo = 'gpt-3.5-turbo'
     if 'api_key' not in st.session_state:
         st.session_state.api_key = le_chave()
-    if 'user_id' not in st.session_state:
-        st.session_state.user_id = str(uuid.uuid4())
 
+    # Carregar conversas do usuário se existirem
     if st.session_state.conversa_atual:
         try:
             st.session_state.mensagens = ler_mensagem_por_nome_arquivo(st.session_state.conversa_atual)

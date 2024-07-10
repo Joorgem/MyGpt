@@ -32,36 +32,30 @@ def retorna_nome_mensagem(mensagens):
 def salvar_mensagens(mensagens):
     if len(mensagens) == 0:
         return False
-    user_dir = PASTA_MENSAGENS / st.session_state.user_id
-    user_dir.mkdir(parents=True, exist_ok=True)
     nome_mensagem = retorna_nome_mensagem(mensagens)
     nome_arquivo = converte_nome_mensagem(nome_mensagem)
     arquivo_salvar = {'nome_mensagem': nome_mensagem,
                       'nome_arquivo': nome_arquivo,
                       'mensagem': mensagens}
-    with open(user_dir / nome_arquivo, 'wb') as f:
+    with open(PASTA_MENSAGENS / nome_arquivo, 'wb') as f:
         pickle.dump(arquivo_salvar, f)
 
 def ler_mensagem_por_nome_arquivo(nome_arquivo, key='mensagem'):
-    user_dir = PASTA_MENSAGENS / st.session_state.user_id
-    with open(user_dir / nome_arquivo, 'rb') as f:
+    with open(PASTA_MENSAGENS / nome_arquivo, 'rb') as f:
         mensagens = pickle.load(f)
     return mensagens[key]
 
 def ler_mensagens(mensagens, key='mensagem'):
     if len(mensagens) == 0:
         return []
-    user_dir = PASTA_MENSAGENS / st.session_state.user_id
     nome_mensagem = retorna_nome_mensagem(mensagens)
     nome_arquivo = converte_nome_mensagem(nome_mensagem)
-    with open(user_dir / nome_arquivo, 'rb') as f:
+    with open(PASTA_MENSAGENS / nome_arquivo, 'rb') as f:
         mensagens = pickle.load(f)
     return mensagens[key]
 
 def listar_conversas():
-    user_dir = PASTA_MENSAGENS / st.session_state.user_id
-    user_dir.mkdir(parents=True, exist_ok=True)
-    conversas = list(user_dir.glob('*'))
+    conversas = list(PASTA_MENSAGENS.glob('*'))
     conversas = sorted(conversas, key=lambda item: item.stat().st_mtime_ns, reverse=True)
     return [c.stem for c in conversas]
 
