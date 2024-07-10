@@ -74,6 +74,7 @@ def tab_conversas(tab):
         tab.button(nome_mensagem,
                    on_click=seleciona_conversa,
                    args=(nome_arquivo,),
+                   key=f"button_{nome_arquivo}",  # Identificador único
                    disabled=nome_arquivo == st.session_state['conversa_atual'],
                    use_container_width=True)
 
