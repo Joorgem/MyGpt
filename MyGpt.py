@@ -46,6 +46,10 @@ def pagina_principal():
                                                 st.session_state['api_key'],
                                                 model=st.session_state['modelo'],
                                                 stream=True)
+            if respostas is None:
+                st.error("Chave de API inválida. Por favor, verifique e tente novamente.")
+                return
+
             for resposta in respostas:
                 for choice in resposta.choices:
                     if hasattr(choice.delta, 'content') and choice.delta.content is not None:
