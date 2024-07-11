@@ -5,9 +5,9 @@ from unidecode import unidecode
 import streamlit as st
 
 PASTA_CONFIGURACOES = Path(__file__).parent / 'configuracoes'
-PASTA_CONFIGURACOES.mkdir(exist_ok=True)
+PASTA_CONFIGURACOES.mkdir(existok=True)
 PASTA_MENSAGENS = Path(__file__).parent / 'mensagens'
-PASTA_MENSAGENS.mkdir(exist_ok=True)
+PASTA_MENSAGENS.mkdir(existok=True)
 CACHE_DESCONVERTE = {}
 
 def converte_nome_mensagem(nome_mensagem):
@@ -17,13 +17,16 @@ def converte_nome_mensagem(nome_mensagem):
 
 def desconverte_nome_mensagem(nome_arquivo):
     if nome_arquivo not in CACHE_DESCONVERTE:
-        try:
-            nome_mensagem = ler_mensagem_por_nome_arquivo(nome_arquivo, key='nome_mensagem')
-            CACHE_DESCONVERTE[nome_arquivo] = nome_mensagem
-        except FileNotFoundError:
-            return "Arquivo não encontrado"
+        caminho_arquivo = PASTA_MENSAGENS / nome_arquivo
+        if caminho_arquivo.is_file():
+            try:
+                nome_mensagem = ler_mensagem_por_nome_arquivo(nome_arquivo, key='nome_mensagem')
+                CACHE_DESCONVERTE[nome_arquivo] = nome_mensagem
+            except FileNotFoundError:
+                return ""
+        else:
+            return ""
     return CACHE_DESCONVERTE[nome_arquivo]
-
 
 def retorna_nome_mensagem(mensagens):
     nome_mensagem = ''

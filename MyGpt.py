@@ -69,6 +69,8 @@ def tab_conversas(tab):
     conversas = listar_conversas()
     for nome_arquivo in conversas:
         nome_mensagem = desconverte_nome_mensagem(nome_arquivo).capitalize()
+        if not nome_mensagem:  # Pular arquivos inválidos
+            continue
         if len(nome_mensagem) == 30:
             nome_mensagem += '...'
         tab.button(nome_mensagem,
